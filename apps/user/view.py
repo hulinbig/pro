@@ -46,10 +46,25 @@ def login():
         username = request.form.get('username')
         password = hashlib.md5(request.form.get('password').encode('utf-8')).hexdigest()
         #获取数据库里的数据，与账号密码匹配
-        users = User.query.all()
-        for user in users:
-            if username == user.username and password == user.password:
-                return redirect(url_for('user.user_center'))
-            else:
-                print("账号或密码错误")
+        # users = User.query.all()
+        #for循环验证账号密码
+        # for user in users:
+        #     if username == user.username and password == user.password:
+        #         return redirect(url_for('user.user_center'))
+        #     else:
+        #         print("账号或密码错误")
+        #数据库查询验证账号
+        user_list = User.query.filter_by(username=username)
+        us = User.query.filter(User.username==username)
+        print('1', user_list)
+        print('2', us)
+        for u in user_list:
+            if u.password == password:
+                return '用户登陆成功'
+        else:
+            return render_template('user/login.html', msg='用户名或密码错误')
+
+
     return render_template('user/login.html')
+
+
