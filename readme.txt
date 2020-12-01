@@ -39,10 +39,28 @@ python，关于数据库的查询语法
    user8 = User.query.limit(2).all() #默认获取二条记录
    user8 = User.query.offset(2).limit(2).all()#跳过二条记录在获取二条
 
+删除
+二种删除
+1.逻辑删除 （定义数据库中的表的时候，添加一个字段isdelete，通过此字段控制是否删除）
+    id = request.args.get(id)
+    user = User.query.get(id)
+    user.delete = True
+    db.session.commit()
 
+2.物理删除 (彻底从数据库中删掉)
+    id = request.args.get(id)
+    user = User.query.get(id)
+    db.session.delete(user)
+    db.session.commit()
 
-
-
+更新:
+    id = request.args.get(id)
+    user = User.query.get(id)
+    #修改对象的属性
+    user.username = XXX
+    user.phone = XXX
+    #提交更改
+    db.session.commit()
 
 
 

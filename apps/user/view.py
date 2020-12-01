@@ -7,6 +7,8 @@ import hashlib
 from sqlalchemy import or_,and_
 user_bp = Blueprint('user', __name__)
 
+
+#用户注册
 @user_bp.route('/register', methods = ['GET', 'POST'])
 def register():
     if request.method == 'POST':
@@ -32,14 +34,15 @@ def register():
             return "二次密码不一致"
     return render_template('user/register.html')
 
-
+#用户中心
 @user_bp.route('/', methods=['GET', 'POST'])
 def user_center():
     #查询数据库中的数据
-    users = User.query.all() #select * from user;
+    users = User.query.filter(User.isdelete == False).all() #select * from user;
     print(users) #[user_objA, user_objB] 返回的是数据对象
     return render_template('user/center.html', users=users)
 
+#用户登陆
 @user_bp.route('/login', methods=['GET', 'POST'])
 def login():
     #获取输入的用户名和密码
@@ -67,6 +70,12 @@ def login():
 
     return render_template('user/login.html')
 
+#用户搜索
+@user_bp.route('/search')
+def search():
+    keyqord = request.args.get('search')
+    user_list = User.query.filter(or_(User.username.contains(keyqord), User.phone.contains(keyqord))).all()
+    return render_template('user/center.html', users=user_list)
 
 #测试路由
 @user_bp.route('/test')
@@ -100,30 +109,27 @@ def user_select():
     return render_template('user/select.html', user2=user4)
 
 
+#用户删除
+@user_bp.route('/delete', endpoint='delete')
+def user_delete():
+    #获取用户id
+    id = request.args.get('id')
+    #获取该id的用户
+    user = User.query.get(id)
+    #逻辑删除
+    user.isdelete = True
+    #提交
+    db.session.commit()
+    #2.物理删除
+    # user = User.query.get(id)
+    # #将对象放到缓存准备删除
+    # db.session.delete(user)
+    # db.session.commit()
+    return redirect(url_for('user.user_center'))
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+#用户信息更新
+@user_bp.route('/update', endpoint='ipdate', method=['POST', 'GET'])
+def update():
+    if request.method == 'POST':
+        pass
+    return render_template('user/update.html')
