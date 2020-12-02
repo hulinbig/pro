@@ -25,7 +25,7 @@
             <th>{{ user.username }}</th>
             <th>{{ user.phone }}</th>
             <th>{{ user.rdatetime }}</th>
-            <th><a href="" >编辑</a> <a href="{{ url_for('user.delete') }}?id={{ user.id }}">删除</a></th>
+            <th><a href="{{ url_for('user.update') }}?id={{ user.id }}" >更新</a> <a href="{{ url_for('user.delete') }}?id={{ user.id }}">删除</a></th>
         </tr>
     {%  endfor %}
         </table>

@@ -128,8 +128,21 @@ def user_delete():
     return redirect(url_for('user.user_center'))
 
 #用户信息更新
-@user_bp.route('/update', endpoint='update', method=['POST', 'GET'])
-def update():
+@user_bp.route('/update', endpoint='update', methods=['POST', 'GET'])
+def user_update():
     if request.method == 'POST':
-        pass
-    return render_template('user/update.html')
+        id = request.form.get('id')
+        username = request.form.get('username')
+        phone = request.form.get('phone')
+        #找用户
+        user = User.query.get(id)
+        #修改用户的信息
+        user.phone = phone
+        user.username = username
+        #提交
+        db.session.commit()
+        return redirect(url_for('user.user_center'))
+    else:
+        id = request.args.get('id')
+        user = User.query.get(id)
+        return render_template('user/update.html', users=user)
