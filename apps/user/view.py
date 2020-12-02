@@ -128,7 +128,7 @@ def user_delete():
     return redirect(url_for('user.user_center'))
 
 #用户信息更新
-@user_bp.route('/update', endpoint='ipdate', method=['POST', 'GET'])
+@user_bp.route('/update', endpoint='update', method=['POST', 'GET'])
 def update():
     if request.method == 'POST':
         pass
